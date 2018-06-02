@@ -1,4 +1,5 @@
-##exports 和 module.exports的区别
+# day1 node in action chapter3
+## exports 和 module.exports的区别
 ### exports
 ``` js
 var module = require('module');
