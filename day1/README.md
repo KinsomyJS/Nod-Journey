@@ -25,3 +25,32 @@ var exports = {};
 ```js
 module.exports = exports = Base
 ```
+
+## 继承
+继承有两种简洁的写法：
+```js
+var util = require('util');
+util.inherits(child,parent);
+```
+
+```js
+child.prototype = new parent();
+```
+## 匿名函数解决异步时序混乱问题
+```js
+var color = 'blue';
+setTimeout(() => {
+    console.log('the color is :' + color);
+}, 200);
+var color = 'green';
+```
+在上面这个代码里，最后输出的颜色是green，因为输出是异步执行的，延迟了200ms，这个时候color已经改变，这样就会导致时序混乱，要解决可以用闭包匿名函数，color变成了函数内部的本地变量，不受外部影响。
+```js
+var color = 'blue';
+(function (color) {
+    setTimeout(() => {
+        console.log('the color is :' + color);
+    }, 200)
+})(color);
+var color = 'green';
+```
