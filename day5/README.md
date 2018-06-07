@@ -149,3 +149,15 @@ function isFormData(req) {
 }
 server.listen(3000);
 ```
+
+### https
+关于https的知识就不在这赘述，大家自行了解。
+可以用openssl生成一个自签发的证书，但是这个证书只能用作本地测试用，并不能用在正式网站上，浏览器检查到用户带有这个不可信的证书会发出警告。
+安装node的时候就已经安装了openssl，用openssl命令生成一个key.pem的私钥文件：
+```s
+openssl genrsa 1024 > key.pem
+```
+除了私钥，还需要生成一份证书，这里面包含了公钥和证书持有者的信息，可以用来加密从客户端发往服务器的数据，在服务器端用私钥进行解密，输入命令生成key-cert.pem的证书：
+```s
+openssl req -x509 -new key key.pem > key-cert.pem
+```
