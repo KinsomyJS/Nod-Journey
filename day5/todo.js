@@ -1,6 +1,7 @@
 var http = require('http');
 var items = [];
 var server = http.createServer(function (req, res) {
+    //只有当path为/时才进行处理，否则返回404
     if (req.url == '/') {
         switch (req.method) {
             case 'GET':
