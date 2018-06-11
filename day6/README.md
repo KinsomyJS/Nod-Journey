@@ -102,6 +102,51 @@ client.lrange('tasks', 0, 2, function (err, items) {
 });
 ```
 **需要注意的事push进去的顺序和实际取出来index相反**
-链表的缺点在于性能较低下，随着链表长度的增加，速度会变慢。
+链表的缺点在于性能较低下，他是O(n)的随着链表长度的增加，速度会变慢。
 
+6、用集合存储和获取数据
+集合的速度取决于集合的大小，它是O(1)的，集合中的元素是唯一的，不可重复，如果重复添加相同的值，第二次及以后的操作会被忽略
+```js
+//集合操作数据
+client.sadd('ip_addresses', '204.10.37.96', redis.print);
+client.sadd('ip_addresses', '204.10.37.96', redis.print);
+client.sadd('ip_addresses', '144.102.12.22', redis.print);
+//取数据
+client.smembers('ip_addresses', function (err, members) {
+    if (err) throw err;
+    console.log('-------set--------')
+    console.log(members);
+});
+```
+7、redis订阅消息功能
+redis有类似于订阅者模式的设计，可以创建subscriber订阅一个channel，然后创建publisher在channel上发送消息，则所有订阅该channel的subscriber都能接收到消息。
+```js
+//信道传递数据
+var net = require('net');
+var server = net.createServer(function (socket) {
+    var subscriber;//消息订阅者
+    var publisher;//消息发布者
+    //连接后创建订阅和发布客户端
+    socket.on('connect', function () {
+        subscriber = redis.createClient();
+        subscriber.subscribe('main_channel');//订阅channel
+        //message事件接受消息
+        subscriber.on('message', function (channel, message) {
+            socket.write('Channel: ' + channel + ': ' + message);
+        });
+        publisher = redis.createClient();
+    });
+    //收到数据后发送消息
+    socket.on('data',function(data){
+        publisher.publish('main_channel',data);
+    });
+    //end事件断开订阅
+    socket.on('end',function(){
+        subscriber.unsubscribe('main_channel');
+        subscriber.end();
+        publisher.end();
+    });
+});
+server.listen(3000);
+```
 

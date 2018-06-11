@@ -47,3 +47,42 @@ client.lrange('tasks', 0, 2, function (err, items) {
         console.log(' ' + item);
     });
 });
+
+//集合操作数据
+client.sadd('ip_addresses', '204.10.37.96', redis.print);
+client.sadd('ip_addresses', '204.10.37.96', redis.print);
+client.sadd('ip_addresses', '144.102.12.22', redis.print);
+//取数据
+client.smembers('ip_addresses', function (err, members) {
+    if (err) throw err;
+    console.log('-------set--------')
+    console.log(members);
+});
+
+//信道传递数据
+var net = require('net');
+var server = net.createServer(function (socket) {
+    var subscriber;//消息订阅者
+    var publisher;//消息发布者
+    //连接后创建订阅和发布客户端
+    socket.on('connect', function () {
+        subscriber = redis.createClient();
+        subscriber.subscribe('main_channel');//订阅channel
+        //message事件接受消息
+        subscriber.on('message', function (channel, message) {
+            socket.write('Channel: ' + channel + ': ' + message);
+        });
+        publisher = redis.createClient();
+    });
+    //收到数据后发送消息
+    socket.on('data',function(data){
+        publisher.publish('main_channel',data);
+    });
+    //end事件断开订阅
+    socket.on('end',function(){
+        subscriber.unsubscribe('main_channel');
+        subscriber.end();
+        publisher.end();
+    });
+});
+server.listen(3000);
