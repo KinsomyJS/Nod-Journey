@@ -1,7 +1,7 @@
 var connect = require('connect');
 var app = connect();
 app.listen(3000);
-app.use('/log', logger);
+app.use('/log', logger);//只有url前缀匹配/log才会调用
 app.use(hello);
 
 //日志中间件
