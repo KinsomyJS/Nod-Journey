@@ -41,5 +41,8 @@ app.use(function(err, req, res, next) {
 
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){
+  if ('development' == app.get('env')) {
+    console.log('development env');
+  }
   console.log('Express server listening on port ' + app.get('port'));
 });
