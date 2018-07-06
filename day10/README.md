@@ -1,5 +1,6 @@
 # Express (一)
 Express是nodejs中的一个web框架，它构建在Connect智商。Express提供了统一的视图系统，可以用各种数据格式返回响应、实现传送文件以及路由URL等。
+下面都是基于Express4开发。
 ## 安装 Express
 首先安装全局Express和Express cli
 ```s
@@ -84,4 +85,16 @@ var server = http.createServer(app);
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+```
+
+## 配置Express
+process.env.NODE_ENV 或 app.get('env')使用来判断node程序所处的环境的，环境的名字可以任意起。在启动node程序的时候，输入以下命令：
+```s
+NODE_ENV=development node app.js
+```
+有些中间件只会在开发环境中使用，如详细日志等，而在开发环境中就不用，这个时候就需要对环境进行判断。
+```js
+if ('development' == app.get('env')) {
+    console.log('development env');
+  }
 ```
