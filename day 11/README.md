@@ -70,9 +70,10 @@ module.exports = mongoose.model('Photo',schema);
 
 ### 创建照片上传表单
 1、在app.js中定义get和post路由。
+上传我们用到模块 multer,地址为 https://github.com/expressjs/multer/blob/master/README.md
 ```js
 app.get('/upload', photos.form);
-app.post('/upload', photos.submit(app.get('photos')));
+app.post('/upload', upload.single('photo'), photos.submit(app.get('photos')));
 ```
 2、创建上传表单 views/photos/upload.ejs
 

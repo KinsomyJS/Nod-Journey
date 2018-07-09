@@ -38,7 +38,9 @@ exports.form = function (req, res) {
 //dir为app.js中定义的photos
 exports.submit = function (dir) {
     return function (req, res, next) {
-        var img = req.files.photo.image;
+        console.log('req.body',req.body);
+        console.log('req.file',req.file);
+        var img = req.file.photo;
         var name = req.body.photo.name || img.name;
         var path = join(dir, img.name);
         //重命名文件来移动文件
