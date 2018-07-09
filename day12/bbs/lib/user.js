@@ -1,18 +1,3 @@
-# Express进阶（一）
-创建支持ejs和会话的程序骨架。
-```s
-express -e bbs
-```
-进入bbs文件夹，npm install安装依赖项。
-## 认证用户
-因为需要用到redis存储用户数据，同时还要用到bcrypt处理密码，所以要额外安装这两个第三方模块。
-```s
-npm install redis bcrypt --save
-```
-
-### 创建用户模型
-在/bbs/lib/ 下创建一个用户数据模型文件user.js。
-```js
 var redis = require('redis');
 var bcrypt = require('bcrypt');
 //创建到redis的连接
@@ -70,13 +55,10 @@ User.prototype.hashPassword = function (fn) {
         });
     });
 };
-```
-### 测试用户保存
-在user.js下创建测试用例
-```js
+
 /**
  * 测试用例
- */
+
 var kinsomy = new User({
     name: 'kinsomy',
     pass: '123',
@@ -90,18 +72,8 @@ kinsomy.save(function (err) {
     }
     console.log('user id %d', kinsomy.id);
 });
-```
-在命令行启动redis服务器，然后运行user.js，查看redis是否存储成功。
-```s
-redis-server
-redis-cli
-GET user:ids //获得最近创建的数据
-HGETALL user:1 //获得数据
-```
+*/
 
-### 根据用户名获取用户信息
-在web界面上，用户会输入用户名和密码来进行登录操作，这个时候就需要根据用户名来获取用户信息，首先根据用户名获取用户id，接着根据用户id来获取user对象。
-```js
 //根据用户名获取用户
 User.getByName = function (name, fn) {
     User.getId(name, function (err, id) {
@@ -120,10 +92,7 @@ User.get = function (id, fn) {
         fn(null, new User(user));
     });
 };
-```
 
-### 认证用户登录
-```js
 //认证
 User.authenticatie = function(name,pass,fn){
     User.getByName(name,function(err,user){
@@ -132,8 +101,7 @@ User.authenticatie = function(name,pass,fn){
         bcrypt.hash(pass,user.salt,function(err,hash){
             if(err) return fn(err);
             if(hash == user.pass) return fn(null,user);
-            fn();
+            fn();//密码错误
         });
     });
 };
-```
