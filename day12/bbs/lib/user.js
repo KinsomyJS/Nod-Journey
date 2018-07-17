@@ -84,7 +84,7 @@ User.getByName = function (name, fn) {
 
 User.getId = function (name, fn) {
     db.get('user:id:' + name, fn);
-}
+};
 
 User.get = function (id, fn) {
     db.hgetall('user:' + id, function (err, user) {
