@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var register = require('./routes/register');
 
 var app = express();
 
@@ -37,5 +38,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+//添加路由
+app.get('/register',register.form);
+app.post('/register',register.submit);
 
 module.exports = app;
